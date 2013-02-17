@@ -71,7 +71,7 @@ npm install multilevel
 ## Contributing
 
 Currently you have to do the `client.on('remote', ...)` dance on the client, it
-would be nice to avoid that and have the full API exposed immidiately. This
+would be nice to avoid that and have the full API exposed immediately. This
 means that each method call has to be buffered until the remote is available and
 then fired again.
 
