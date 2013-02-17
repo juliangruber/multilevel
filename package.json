@@ -1,0 +1,29 @@
+{
+  "name": "multilevel",
+  "version": "0.0.0",
+  "description": "A levelUp instance exposed over a streaming interface",
+  "main": "index.js",
+  "scripts": {
+    "test": "tap test/*.js"
+  },
+  "repository": "",
+  "keywords": [
+    "levelup",
+    "leveldb",
+    "rpc",
+    "stream"
+  ],
+  "author": "Julian Gruber <julian@juliangruber.com>",
+  "license": "MIT",
+  "dependencies": {
+    "pause-stream": "0.0.9",
+    "emit-stream": "~0.1.0",
+    "mux-demux": "~3.5.3",
+    "dnode": "~1.0.2",
+    "levelup": "~0.5.4"
+  },
+  "devDependencies": {
+    "tap": "~0.4.0",
+    "rimraf": "~2.1.4"
+  }
+}
