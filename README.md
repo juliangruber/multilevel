@@ -17,7 +17,7 @@ var db = levelup('/my/db')
 var server = multilevel.server(db)
 
 net.createServer(function (c) {
-  c.pipe(db).pipe(c)
+  c.pipe(server).pipe(c)
 }).listen(3000)
 ```
 
