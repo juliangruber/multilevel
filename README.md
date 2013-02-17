@@ -4,7 +4,7 @@
 Expose a levelDB over the network, to be used by multiple processes,
 with [levelUp](https://github.com/rvagg/node-levelup)'s API.
 
-## usage
+## Usage
 
 expose a db on the server:
 
