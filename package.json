@@ -1,12 +1,12 @@
 {
   "name": "multilevel",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A levelUp instance exposed over a streaming interface",
   "main": "index.js",
   "scripts": {
     "test": "tap test/*.js"
   },
-  "repository": "",
+  "repository": "git://github.com/juliangruber/multilevel",
   "keywords": [
     "levelup",
     "leveldb",
