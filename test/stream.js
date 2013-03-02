@@ -4,7 +4,7 @@ var test = require('tap').test
 test('stream', function (t) {
   t.plan(4)
   
-  getDb(function (db) {
+  getDb(function (db, dispose) {
     db.put('foo', 'bar', function (err) {
       if (err) throw err
       
@@ -17,6 +17,7 @@ test('stream', function (t) {
         db.on('put', function (key, value) {
           t.equal(key, 'bar')
           t.equal(value, 'baz')
+          dispose()
         })
 
         var stream = db.writeStream()

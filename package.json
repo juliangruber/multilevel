@@ -1,6 +1,6 @@
 {
   "name": "multilevel",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A levelUp instance exposed over a streaming interface",
   "main": "index.js",
   "scripts": {
