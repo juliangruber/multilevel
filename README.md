@@ -1,8 +1,9 @@
-
 # multilevel
 
 Expose a levelDB over the network, to be used by multiple processes,
 with [levelUp](https://github.com/rvagg/node-levelup)'s API.
+
+[![Build Status](https://travis-ci.org/juliangruber/multilevel.png?branch=master)](https://travis-ci.org/juliangruber/multilevel)
 
 ## Usage
 
