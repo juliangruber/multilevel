@@ -34,8 +34,9 @@ client.on('remote', function (db) {
   // asynchronous methods
   db.get('foo', function () { /* */ })
   
-  // synchronous methods
-  db.isOpen(function () { /* */ })
+  // synchronous methods (see API below)
+  db.isOpen(function (err, isOpen) { /* */ })
+  var isOpen = db.isOpen()
   
   // events
   db.on('put', function () { /* */ })
@@ -50,8 +51,13 @@ client.pipe(net.connect(3000)).pipe(client)
 ## API
 
 The exposed DB has the exact same API as
-[levelUp](https://github.com/rvagg/node-levelup) except for the two methods
-`isOpen()` and `isClosed()` which had to be made asynchronous.
+[levelUp](https://github.com/rvagg/node-levelup).
+
+The methods `db#isOpen` and `db#isClosed` needed special treatment here,
+since they work synchronouly in levelUp. You can use the return value of
+`db#isOpen` and `db#isClosed`, which can be up to date, but there is no guarantee.
+If that's not acceptable for you, `db#isOpen(cb)` and `db#isClosed(cb)` will always
+call `cb` with the correct result.
 
 ### multilevel.server(db)
 
@@ -75,6 +81,10 @@ Currently you have to do the `client.on('remote', ...)` dance on the client, it
 would be nice to avoid that and have the full API exposed immediately. This
 means that each method call has to be buffered until the remote is available and
 then fired again.
+
+Also, the synchronous versions of `db#isOpen` and `db#isClosed` will not be up to
+date if database is closed after you connected. The `close` event has to be captured
+at the right place and then would modify `isOpen`.
 
 ```bash
 $ npm install
