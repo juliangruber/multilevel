@@ -7,6 +7,8 @@ test('sync isOpen / isClosed', function (t) {
   getDb(function (db, dispose) {
     t.assert(db.isOpen())
     t.assert(!db.isClosed())
+    db.dnode.emit('end')
+    t.assert(db.isClosed())
     dispose()
   })
 })
