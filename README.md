@@ -15,10 +15,9 @@ var net = require('net')
 var levelup = require('levelup')
 
 var db = levelup('/my/db')
-var server = multilevel.server(db)
 
 net.createServer(function (c) {
-  c.pipe(server).pipe(c)
+  c.pipe(multilevel.server(db)).pipe(c)
 }).listen(3000)
 ```
 
