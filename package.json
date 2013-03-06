@@ -1,6 +1,6 @@
 {
   "name": "multilevel",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "A levelUp instance exposed over a streaming interface",
   "main": "index.js",
   "scripts": {
@@ -19,11 +19,11 @@
     "pause-stream": "0.0.9",
     "emit-stream": "~0.1.0",
     "mux-demux": "~3.5.3",
-    "dnode": "~1.0.2",
-    "levelup": "~0.5.4"
+    "dnode": "~1.0.2"
   },
   "devDependencies": {
     "tap": "~0.4.0",
-    "rimraf": "~2.1.4"
+    "rimraf": "~2.1.4",
+    "levelup": "~0.5.4"
   }
 }

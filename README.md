@@ -60,8 +60,7 @@ call `cb` with the correct result.
 
 ### multilevel.server(db)
 
-Returns a server-stream that exposes `db`, which can either be an instance of
-levelUp or the patch to a database. 
+Returns a server-stream that exposes `db`, an instance of levelUp.
 
 ### multilevel.client()
 
