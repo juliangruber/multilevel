@@ -46,18 +46,16 @@ function fakeNetwork (num, cb) {
     }*/
 
     var server = multilevel.server(db)
-    var client = multilevel.client()
+    var _db = multilevel.client()
+    _db.pipe(server).pipe(_db)
 
     /*server.on('data', collect)
     client.on('data', collect)*/
 
-    client.pipe(server).pipe(client)
-    client.on('remote', function (_db) {
-      write(_db, num, function (err, results) {
-        db.close()
-        cb(err, 'multilevel direct  : ' + results/* + ', traffic: ' + traffic*/)
-      })  
-    })
+    write(_db, num, function (err, results) {
+      db.close()
+      cb(err, 'multilevel direct  : ' + results/* + ', traffic: ' + traffic*/)
+    })  
   })
 }
 
@@ -69,18 +67,17 @@ function realNetwork (num, cb) {
       c.pipe(multilevel.server(db)).pipe(c)
     })
     server.listen(5001)
-    var con = net.connect(5001)
 
-    var client = multilevel.client()
-    client.on('remote', function (_db) {
-      write(_db, num, function (err, results) {
-        db.close()
-        server.close()
-        con.destroy()
-        cb(err, 'multilevel network : ' + results)
-      })  
-    })
-    client.pipe(con).pipe(client)
+    var _db = multilevel.client()
+    var con = net.connect(5001)
+    _db.pipe(con).pipe(_db)
+
+    write(_db, num, function (err, results) {
+      db.close()
+      server.close()
+      con.destroy()
+      cb(err, 'multilevel network : ' + results)
+    })  
   })
 }
 
