@@ -1,6 +1,6 @@
 {
   "name": "multilevel",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A levelUp instance exposed over a streaming interface",
   "main": "index.js",
   "scripts": {
@@ -25,6 +25,7 @@
   "devDependencies": {
     "tap": "~0.4.0",
     "rimraf": "~2.1.4",
-    "levelup": "~0.5.4"
+    "levelup": "~0.5.4",
+    "freeport": "~1.0.0"
   }
 }
