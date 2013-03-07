@@ -71,10 +71,6 @@ npm install multilevel
 
 ## Contributing
 
-The synchronous versions of `db#isOpen` and `db#isClosed` will not be up to
-date if database is closed after you connected. The `close` event has to be captured
-at the right place and then would modify `isOpen`.
-
 ```bash
 $ npm install
 $ npm test
