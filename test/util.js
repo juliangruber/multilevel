@@ -12,6 +12,8 @@ util.getDb = function (cb) {
     var db = levelup(__dirname + '/db')
 
     var server = net.createServer(function (con) {
+      con.on('error', function () { /* noop */ })
+
       var server = multilevel.server(db)
 
       con.on('data', function (data) {
