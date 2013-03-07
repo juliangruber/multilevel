@@ -22,8 +22,12 @@ var net = require('net')
 var path = '/tmp/multilevel-test-db'
 var str = '1234567890abcdef'
 
-run(1e3, function () {
-  run(1e4)
+run(1e2, function () {
+  run(1e3, function () {
+    run(1e4, function () {
+      run(1e5)
+    })
+  })
 })
 
 function native (num, cb) {
@@ -52,10 +56,12 @@ function fakeNetwork (num, cb) {
     /*server.on('data', collect)
     client.on('data', collect)*/
 
-    write(_db, num, function (err, results) {
-      db.close()
-      cb(err, 'multilevel direct  : ' + results/* + ', traffic: ' + traffic*/)
-    })  
+    setTimeout(function () {
+      write(_db, num, function (err, results) {
+        db.close()
+        cb(err, 'multilevel direct  : ' + results/* + ', traffic: ' + traffic*/)
+      })  
+    }, 1000)
   })
 }
 
@@ -72,12 +78,14 @@ function realNetwork (num, cb) {
     var con = net.connect(5001)
     _db.pipe(con).pipe(_db)
 
-    write(_db, num, function (err, results) {
-      db.close()
-      server.close()
-      con.destroy()
-      cb(err, 'multilevel network : ' + results)
-    })  
+    setTimeout(function () {
+      write(_db, num, function (err, results) {
+        db.close()
+        server.close()
+        con.destroy()
+        cb(err, 'multilevel network : ' + results)
+      })  
+    })
   })
 }
 
