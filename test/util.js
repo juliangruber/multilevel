@@ -30,6 +30,7 @@ util.getDb = function (cb) {
       server.listen(port, function () {
         var _db = multilevel.client()
         var con = net.connect(port)
+        con.on('error', function () { /* noop */})
         _db.pipe(con).pipe(_db)
 
         _db.on('data', function (data) {
