@@ -5,6 +5,8 @@ with [levelUp](https://github.com/rvagg/node-levelup)'s API.
 
 [![Build Status](https://travis-ci.org/juliangruber/multilevel.png?branch=master)](https://travis-ci.org/juliangruber/multilevel)
 
+[![browser support](http://ci.testling.com/juliangruber/multilevel.png)](http://ci.testling.com/juliangruber/multilevel)
+
 ## Usage
 
 expose a db on the server:
