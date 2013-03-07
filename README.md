@@ -27,24 +27,21 @@ and connect to it from the client:
 var multilevel = require('multilevel')
 var net = require('net')
 
-var client = multilevel.client()
-client.on('remote', function (db) {
+var db = multilevel.client()
+db.pipe(net.connect(3000)).pipe(db)
   
-  // asynchronous methods
-  db.get('foo', function () { /* */ })
-  
-  // synchronous methods (see API below)
-  db.isOpen(function (err, isOpen) { /* */ })
-  var isOpen = db.isOpen()
-  
-  // events
-  db.on('put', function () { /* */ })
-  
-  // streams
-  db.readStream().on('data', function () { /* */ })
-  
-})
-client.pipe(net.connect(3000)).pipe(client)
+// asynchronous methods
+db.get('foo', function () { /* */ })
+
+// synchronous methods (see API below)
+db.isOpen(function (err, isOpen) { /* */ })
+var isOpen = db.isOpen()
+
+// events
+db.on('put', function () { /* */ })
+
+// streams
+db.readStream().on('data', function () { /* */ })
 ```
 
 ## API
@@ -62,10 +59,9 @@ call `cb` with the correct result.
 
 Returns a server-stream that exposes `db`, an instance of levelUp.
 
-### multilevel.client()
+### var db = multilevel.client()
 
-Returns a client-stream that is to be piped into a server-stream and emits an
-`remote` event when the exposed DB is available.
+Returns a `db` that is to be piped into a server-stream.
 
 ## Installation
 
@@ -75,12 +71,7 @@ npm install multilevel
 
 ## Contributing
 
-Currently you have to do the `client.on('remote', ...)` dance on the client, it
-would be nice to avoid that and have the full API exposed immediately. This
-means that each method call has to be buffered until the remote is available and
-then fired again.
-
-Also, the synchronous versions of `db#isOpen` and `db#isClosed` will not be up to
+The synchronous versions of `db#isOpen` and `db#isClosed` will not be up to
 date if database is closed after you connected. The `close` event has to be captured
 at the right place and then would modify `isOpen`.
 

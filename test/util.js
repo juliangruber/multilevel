@@ -25,17 +25,15 @@ util.getDb = function (cb) {
     })
     server.listen(port)
   
-    var client = multilevel.client()
-    client.on('data', function (data) {
+    var _db = multilevel.client()
+    var con = net.connect(port)
+    _db.pipe(con).pipe(_db)
+
+    _db.on('data', function (data) {
       //console.log('C -> ' + data)
     })
 
-    client.on('remote', function (remote) {
-      cb(remote, dispose)
-    })
-
-    var con = net.connect(port)
-    client.pipe(con).pipe(client)
+    cb(_db, dispose)
 
     function dispose () {
       server.close()
