@@ -27,5 +27,16 @@
     "rimraf": "~2.1.4",
     "levelup": "~0.5.4",
     "freeport": "~1.0.0"
+  },
+  "testling": {
+    "files": "test/*.js",
+    "browsers": [
+      "ie/6..latest",
+      "chrome/20..latest",
+      "firefox/10..latest",
+      "safari/latest",
+      "opera/11.0..latest",
+      "iphone/6", "ipad/6"
+    ]
   }
 }
