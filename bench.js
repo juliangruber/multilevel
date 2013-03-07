@@ -40,22 +40,22 @@ function fakeNetwork (num, cb) {
   getDb(function (err, db) {
     if (err) return cb(err)
 
-    var traffic = 0
+    /*var traffic = 0
     function collect (data) {
       traffic += data.length
-    }
+    }*/
 
     var server = multilevel.server(db)
     var client = multilevel.client()
 
-    server.on('data', collect)
-    client.on('data', collect)
+    /*server.on('data', collect)
+    client.on('data', collect)*/
 
     client.pipe(server).pipe(client)
     client.on('remote', function (_db) {
       write(_db, num, function (err, results) {
         db.close()
-        cb(err, 'multilevel direct  : ' + results + ', traffic: ' + traffic)
+        cb(err, 'multilevel direct  : ' + results/* + ', traffic: ' + traffic*/)
       })  
     })
   })
