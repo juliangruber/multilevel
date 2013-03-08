@@ -1,17 +1,11 @@
 /**
  * Results:
  *
- * writing "1234567890abcdef" 1000 times
- *
- * native             : 15ms (66667 ops/s)
- * multilevel direct  : 77ms (12987 ops/s)
- * multilevel network : 92ms (10870 ops/s)
- *
  * writing "1234567890abcdef" 10000 times
  *
- * native             : 114ms (87719 ops/s)
- * multilevel direct  : 621ms (16103 ops/s)
- * multilevel network : 841ms (11891 ops/s)
+ * native             : 124ms (80645 ops/s)
+ * multilevel direct  : 601ms (16639 ops/s)
+ * multilevel network : 794ms (12594 ops/s)
  */
 
 var multilevel = require('./')
