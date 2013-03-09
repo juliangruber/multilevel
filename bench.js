@@ -16,13 +16,15 @@ var net = require('net')
 var path = '/tmp/multilevel-test-db'
 var str = '1234567890abcdef'
 
-run(1e2, function () {
+fakeNetwork(1e6, log)
+
+/*run(1e2, function () {
   run(1e3, function () {
     run(1e4, function () {
       run(1e5)
     })
   })
-})
+})*/
 
 function native (num, cb) {
   getDb(function (err, db) {
@@ -119,7 +121,7 @@ function write (db, num, cb) {
         cb = function () {}
         return oldCb(err)
       }
-      if (++written == num) {
+      if (++written === num) {
         var duration = Date.now() - start
         cb(
           null,
