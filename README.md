@@ -43,7 +43,7 @@ var isOpen = db.isOpen()
 db.on('put', function () { /* */ })
 
 // streams
-db.readStream().on('data', function () { /* */ })
+db.createReadStream().on('data', function () { /* */ })
 ```
 
 ## API
