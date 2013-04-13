@@ -6,14 +6,19 @@ var levelup = require('levelup')
 var freeport = require('freeport')
 var manifest = require('level-manifest')
 
-util.getDb = function (cb) {
+console.log('de', DEBUG)
+var DEBUG = process.env.DEBUG
+
+util.getDb = function (setup, cb) {
+  if(!cb) cb = setup, setup = null
   rimraf(__dirname + '/db', function (err) {
     if (err) throw err
     
     var db = levelup(__dirname + '/db')
 
+    if(setup) setup(db)
+
     var m = manifest(db)
-    console.log(m)
 
     var server = net.createServer(function (con) {
       con.on('error', function () { /* noop */ })
@@ -21,10 +26,10 @@ util.getDb = function (cb) {
       var server = multilevel.server(db)
 
       con.on('data', function (data) {
-        console.log('S <- ' + data.toString())
+        DEBUG && console.log('S <- ' + data.toString())
       })
       server.on('data', function (data) {
-        console.log('S -> ' + data.toString())
+        DEBUG && console.log('S -> ' + data.toString())
       })
 
       con.pipe(server).pipe(con)
@@ -40,7 +45,7 @@ util.getDb = function (cb) {
         _db.pipe(con).pipe(_db)
 
         _db.on('data', function (data) {
-          console.log('C -> ' + data)
+          DEBUG && console.log('C -> ' + data)
         })
 
         cb(_db, dispose)
@@ -54,3 +59,5 @@ util.getDb = function (cb) {
     })
   })
 }
+
+

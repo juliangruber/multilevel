@@ -13,7 +13,6 @@ test('async', function (t) {
     db.sublevels['foo'].put('foo', 'bar', function (err) {
       if (err) throw err
       db.sublevels['foo'].get('foo', function (err, value) {
-        console.log('ERR', err)
         if (err) throw err
         t.equal(value, 'bar')
         dispose()

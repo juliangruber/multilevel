@@ -14,12 +14,6 @@ test('stream', function (t) {
         t.equal(data.value, 'bar')
       })
       .on('end', function () {
-/*        db.on('put', function (key, value) {
-          t.equal(key, 'bar')
-          t.equal(value, 'baz')
-          dispose()
-        })*/
-
         var stream = db.writeStream()
         stream.write({ key : 'bar', value : 'baz' })
         stream.on('close', function () {
