@@ -4,6 +4,7 @@ var rimraf = require('rimraf')
 var net = require('net')
 var levelup = require('levelup')
 var freeport = require('freeport')
+var manifest = require('level-manifest')
 
 util.getDb = function (cb) {
   rimraf(__dirname + '/db', function (err) {
@@ -11,16 +12,19 @@ util.getDb = function (cb) {
     
     var db = levelup(__dirname + '/db')
 
+    var m = manifest(db)
+    console.log(m)
+
     var server = net.createServer(function (con) {
       con.on('error', function () { /* noop */ })
 
       var server = multilevel.server(db)
 
       con.on('data', function (data) {
-        //console.log('S <- ' + data.toString())
+        console.log('S <- ' + data.toString())
       })
       server.on('data', function (data) {
-        //console.log('S -> ' + data.toString())
+        console.log('S -> ' + data.toString())
       })
 
       con.pipe(server).pipe(con)
@@ -30,13 +34,13 @@ util.getDb = function (cb) {
       if (err) throw err
 
       server.listen(port, function () {
-        var _db = multilevel.client()
+        var _db = multilevel.client(m)
         var con = net.connect(port)
         con.on('error', function () { /* noop */})
         _db.pipe(con).pipe(_db)
 
         _db.on('data', function (data) {
-          //console.log('C -> ' + data)
+          console.log('C -> ' + data)
         })
 
         cb(_db, dispose)
