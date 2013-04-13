@@ -14,14 +14,23 @@ test('stream', function (t) {
         t.equal(data.value, 'bar')
       })
       .on('end', function () {
-        db.on('put', function (key, value) {
+/*        db.on('put', function (key, value) {
           t.equal(key, 'bar')
           t.equal(value, 'baz')
           dispose()
-        })
+        })*/
 
         var stream = db.writeStream()
         stream.write({ key : 'bar', value : 'baz' })
+        stream.on('close', function () {
+          //setTimeout(function () {
+            db.get('bar', function (err, value) {
+              t.notOk(err)
+              t.equal(value, 'baz')
+              dispose()
+            })
+          //}, 100)
+        })
         stream.end()
       })
     })
