@@ -1,5 +1,5 @@
 var util = module.exports = {}
-var multilevel = require('..')
+var multilevel = require('../')
 var rimraf = require('rimraf')
 var net = require('net')
 var levelup = require('levelup')
