@@ -2,6 +2,7 @@ var getDb = require('./util').getDb
 var test = require('tap').test
 var sublevel = require('level-sublevel')
 var LiveStream = require('level-live-stream')
+
 test('stream', function (t) {
   t.plan(10)
   var j = 10
@@ -11,7 +12,7 @@ test('stream', function (t) {
     LiveStream.install(foo)
   },
   function (db, dispose) {
-    var foo = db.sublevels['foo']
+    var foo = db.sublevel('foo')
 
     var ls = foo.liveStream()
       .on('data', function (d) {
