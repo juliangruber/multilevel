@@ -6,7 +6,6 @@ var levelup = require('levelup')
 var freeport = require('freeport')
 var manifest = require('level-manifest')
 
-console.log('de', DEBUG)
 var DEBUG = process.env.DEBUG
 
 util.getDb = function (setup, cb) {

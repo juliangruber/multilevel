@@ -33,10 +33,8 @@ test('stream', function (t) {
   function (db, dispose) {
     var foo = db.sublevels['foo']
     foo.inc(1, function (err, val) {
-      console.log('value', val)
       t.equal(val, 1)
       foo.inc(2, function (err, val) {
-        console.log('value', val)
         t.equal(val, 3)
         t.end()
         dispose()

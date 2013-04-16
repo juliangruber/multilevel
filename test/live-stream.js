@@ -16,16 +16,12 @@ test('stream', function (t) {
 
     var ls = foo.liveStream()
       .on('data', function (d) {
-        console.log(d)
         t.equal(j-- * 1000, Number(d.value))
 
         if(j) return
         dispose()
         t.end()
 
-      })
-      .on('end', function () {
-        console.log('END')
       })
 
     var i = 10
