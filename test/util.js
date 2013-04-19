@@ -14,15 +14,14 @@ util.getDb = function (setup, cb) {
     if (err) throw err
     
     var db = levelup(__dirname + '/db')
-
-    if(setup) setup(db)
+    var opts
+    if(setup) opts = setup(db)
 
     var m = manifest(db)
 
     var server = net.createServer(function (con) {
       con.on('error', function () { /* noop */ })
-
-      var server = multilevel.server(db)
+      var server = multilevel.server(db, opts)
 
       con.on('data', function (data) {
         DEBUG && console.log('S <- ' + data.toString())
