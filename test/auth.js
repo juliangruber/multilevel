@@ -12,7 +12,7 @@ var opts = {
     console.log(uname, pword)
 
     if(username == uname && password == pword)
-      cb(null, true)
+      cb(null, {name: uname})
     else
       cb(new Error('not authorized'))
   },
@@ -29,7 +29,7 @@ var opts = {
 }
 
 test('auth', function (t) {
-  t.plan(5)
+  t.plan(6)
   
   getDb(function (db) {
     sublevel(db)
@@ -41,8 +41,9 @@ test('auth', function (t) {
     t.ok(db.isClient)
     db.put('foo', 'not allowed', function (err) {
       t.ok(err)
-      db.auth(uname, pword, function (err) {
+      db.auth(uname, pword, function (err, user) {
         t.notOk(err)
+        t.equal(uname, user.name)
         db.put('foo', 'bar', function (err) {
           if (err) throw err
           db.get('foo', function (err, value) {
