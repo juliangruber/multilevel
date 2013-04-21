@@ -1,26 +1,33 @@
 var util = module.exports = {}
-var multilevel = require('..')
+var multilevel = require('../')
 var rimraf = require('rimraf')
 var net = require('net')
 var levelup = require('levelup')
 var freeport = require('freeport')
+var manifest = require('level-manifest')
 
-util.getDb = function (cb) {
+var DEBUG = process.env.DEBUG
+
+util.getDb = function (setup, cb) {
+  if(!cb) cb = setup, setup = null
   rimraf(__dirname + '/db', function (err) {
     if (err) throw err
     
     var db = levelup(__dirname + '/db')
+    var opts
+    if(setup) opts = setup(db)
+
+    var m = manifest(db)
 
     var server = net.createServer(function (con) {
       con.on('error', function () { /* noop */ })
-
-      var server = multilevel.server(db)
+      var server = multilevel.server(db, opts)
 
       con.on('data', function (data) {
-        //console.log('S <- ' + data.toString())
+        DEBUG && console.log('S <- ' + data.toString())
       })
       server.on('data', function (data) {
-        //console.log('S -> ' + data.toString())
+        DEBUG && console.log('S -> ' + data.toString())
       })
 
       con.pipe(server).pipe(con)
@@ -30,13 +37,13 @@ util.getDb = function (cb) {
       if (err) throw err
 
       server.listen(port, function () {
-        var _db = multilevel.client()
+        var _db = multilevel.client(m)
         var con = net.connect(port)
         con.on('error', function () { /* noop */})
         _db.pipe(con).pipe(_db)
 
         _db.on('data', function (data) {
-          //console.log('C -> ' + data)
+          DEBUG && console.log('C -> ' + data)
         })
 
         cb(_db, dispose)
@@ -50,3 +57,5 @@ util.getDb = function (cb) {
     })
   })
 }
+
+

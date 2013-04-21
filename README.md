@@ -33,15 +33,100 @@ db.pipe(net.connect(3000)).pipe(db)
 // asynchronous methods
 db.get('foo', function () { /* */ })
 
-// synchronous methods (see API below)
-db.isOpen(function (err, isOpen) { /* */ })
-var isOpen = db.isOpen()
-
-// events
-db.on('put', function () { /* */ })
-
 // streams
 db.createReadStream().on('data', function () { /* */ })
+```
+
+## sublevel plugins
+
+You can also expose custom methods and [sublevels](https://github.com/dominictarr/level-sublevel)
+with `multilevel`!
+
+When using sublevels, you must generate a manifest, and require it in the client.
+``` js
+//server.js
+var db = require('./setup-db') //all your database customizations
+var fs = require('fs')
+var createManifest = require('level-manifest')
+
+//write out manifest
+fs.writeFileSync('./manifest.json', JSON.stringify(createManifest(db)))
+
+shoe(function (stream) {
+  stream.pipe(multilevel.server(db)).pipe(stream)
+})
+...
+```
+Then, the manifest is required from the client when bundling with browserify.
+
+``` js
+//client.js
+var manifest = require('./manifest.json')
+var stream = shoe()
+var db = multilevel.client(manifest)
+stream.pipe(db).pipe(stream)
+//now, get remote access to your extensions!
+db.sublevel('foo').createLiveStream()
+```
+
+## auth
+
+You do not want to expose every database feature to every user,
+yet, you may want to provide some read-only access, or something.
+
+Auth controls may be injected when creating the server stream.
+
+Allow read only access, unless logged in as root.
+``` js
+//server.js
+var db = require('./setup-db') //all your database customizations
+var fs = require('fs')
+var createManifest = require('level-manifest')
+
+//write out manifest
+fs.writeFileSync('./manifest.json', JSON.stringify(createManifest(db)))
+
+shoe(function (stream) {
+  stream.pipe(multilevel.server(db, {
+    auth: function (user, cb) {
+      if(user.name == 'root' && user.pass == 'toor') {
+        //the data returned will be attached to the mulilevel stream
+        //and passed to `access`
+        cb(null, {name: 'root'})
+      } else
+        cb(new Error('not authorized')
+    },
+    access: function (user, db, method, args) {
+      //`user` is the {name: 'root'} object that `auth`
+      //returned. 
+
+      //if not a privliged user...
+      if(!user || user.name !== 'root') {
+        //do not allow any write access
+        if(/^put|^del|^batch|write/i.test(method))
+          throw new Error('read-only access')
+      }        
+    })
+  })).pipe(stream)
+})
+...
+```
+
+The client authorizes by calling the auth method.
+
+``` js
+var stream = shoe()
+var db = multilevel.client()
+stream.pipe(db).pipe(stream)
+
+db.auth({name: 'root', pass: 'toor'}, function (err, data) {
+  if(err) throw err
+  //later, they can sign out, too.
+
+  db.deauth(function (err) {
+    //signed out!
+  })
+})
 ```
 
 ## API
@@ -55,13 +140,35 @@ since they work synchronouly in levelUp. You can use the return value of
 If that's not acceptable for you, `db#isOpen(cb)` and `db#isClosed(cb)` will always
 call `cb` with the correct result.
 
-### multilevel.server(db)
+### multilevel.server(db, authOpts?)
 
 Returns a server-stream that exposes `db`, an instance of levelUp.
+`authOpts` is optional, it should match this:
 
-### var db = multilevel.client()
+``` js
+var authOpts = {
+  auth: function (userData, cb) {
+    //call back an error, if the user is not authorized.
+
+  },
+  access: function (userData, db, method, args) {
+    //throw if this user is not authorized for this action.
+  }
+}
+```
+### var db = multilevel.client(manifest?)
 
 Returns a `db` that is to be piped into a server-stream.
+`manifest` may be optionally be provided,
+which will allow client access to extensions.
+
+#### db.auth(data, cb)
+
+Authorize with the server.
+
+#### db.deauth (cb)
+
+Deauthorize with the server.
 
 ## Installation
 
