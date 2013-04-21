@@ -183,6 +183,11 @@ $ npm install
 $ npm test
 ```
 
+## Contributors
+
+* @juliangruber
+* @dominictarr
+
 ## License
 
 (MIT)
