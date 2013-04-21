@@ -185,8 +185,8 @@ $ npm test
 
 ## Contributors
 
-* @juliangruber
-* @dominictarr
+* [@juliangruber](https://github.com/juliangruber)
+* [@dominictarr](https://github.com/dominictarr)
 
 ## License
 
