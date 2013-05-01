@@ -135,12 +135,9 @@ db.auth({name: 'root', pass: 'toor'}, function (err, data) {
 
 The exposed DB has the exact same API as
 [levelUp](https://github.com/rvagg/node-levelup).
-
-The methods `db#isOpen` and `db#isClosed` needed special treatment here,
-since they work synchronouly in levelUp. You can use the return value of
-`db#isOpen` and `db#isClosed`, which can be up to date, but there is no guarantee.
-If that's not acceptable for you, `db#isOpen(cb)` and `db#isClosed(cb)` will always
-call `cb` with the correct result.
+Except that `close` closes the connection, instead of the database.
+`isOpen` and `isClose` tell you if you currently have a connection
+to the remote db.
 
 ### multilevel.server(db, authOpts?)
 
