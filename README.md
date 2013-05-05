@@ -167,6 +167,39 @@ Authorize with the server.
 
 Deauthorize with the server.
 
+## Performance
+
+On my macbook pro one multilevel server handles ~15k ops/s over a local tcp
+socket.
+
+```js
+ ∴  bench (master) : node index.js 
+
+writing "1234567890abcdef" 100 times
+
+ native             : 2ms (50000 ops/s)
+ multilevel direct  : 21ms (4762 ops/s)
+ multilevel network : 14ms (7143 ops/s)
+
+writing "1234567890abcdef" 1000 times
+
+ native             : 12ms (83333 ops/s)
+ multilevel direct  : 71ms (14085 ops/s)
+ multilevel network : 77ms (12987 ops/s)
+
+writing "1234567890abcdef" 10000 times
+
+ native             : 88ms (113636 ops/s)
+ multilevel direct  : 594ms (16835 ops/s)
+ multilevel network : 590ms (16949 ops/s)
+
+writing "1234567890abcdef" 100000 times
+
+ native             : 927ms (107875 ops/s)
+ multilevel direct  : 10925ms (9153 ops/s)
+ multilevel network : 9839ms (10164 ops/s)
+```
+
 ## Installation
 
 ```bash
