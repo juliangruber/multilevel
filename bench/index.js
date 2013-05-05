@@ -8,13 +8,17 @@
  * multilevel network : 794ms (12594 ops/s)
  */
 
-var multilevel = require('./')
+var multilevel = require('..')
 var levelup = require('levelup')
 var rimraf = require('rimraf')
 var net = require('net')
+var spawn = require('child_process').spawn
 
 var path = '/tmp/multilevel-test-db'
 var str = '1234567890abcdef'
+var clients = 5
+
+var write = require('./write')(str);
 
 run(1e2, function () {
   run(1e3, function () {
@@ -43,16 +47,21 @@ function fakeNetwork (num, cb) {
       traffic += data.length
     }*/
 
-    var server = multilevel.server(db)
-    var _db = multilevel.client()
-    _db.pipe(server).pipe(_db)
+    var dbs = [];
+
+    for (var i = 0; i < clients; i++) {
+      var server = multilevel.server(db)
+      var _db = multilevel.client()
+      _db.pipe(server).pipe(_db)
+      dbs.push(_db);
+    }
 
     /*server.on('data', collect)
     client.on('data', collect)*/
 
     setTimeout(function () {
-      write(_db, num, function (err, results) {
-        db.close()
+      write(dbs, num, function (err, results) {
+        db.close();
         cb(err, 'multilevel direct  : ' + results/* + ', traffic: ' + traffic*/)
       })  
     }, 1000)
@@ -66,19 +75,29 @@ function realNetwork (num, cb) {
     var server = net.createServer(function (c) {
       c.pipe(multilevel.server(db)).pipe(c)
     })
-    server.listen(5001)
 
-    var _db = multilevel.client()
-    var con = net.connect(5001)
-    _db.pipe(con).pipe(_db)
+    server.listen(5001, function () {
+      var exited = 0;
+      var duration = 0;
+      for (var i = 0; i < clients; i++) {
+        var start = Date.now();
+        var ps = spawn('node', [__dirname + '/client.js', 5001, num/clients, str]);
+        ps.stderr.pipe(process.stderr)
+        ps.stdout.on('data', function (data) {
+          var _num = Number(data.toString())
+          if (_num > duration) duration = _num
 
-    setTimeout(function () {
-      write(_db, num, function (err, results) {
-        db.close()
-        server.close()
-        con.destroy()
-        cb(err, 'multilevel network : ' + results)
-      })  
+          if (++exited == clients) {
+            server.close();
+            db.close();
+
+            cb(null, 'multilevel network : '
+                      + duration + 'ms ('
+                      + (Math.round(num/duration*1000))
+                      + ' ops/s)')
+          }
+        })
+      }
     })
   })
 }
@@ -107,25 +126,4 @@ function log (err, results) {
 function getDb (cb) {
   rimraf.sync(path)
   levelup(path, cb)
-}
-
-function write (db, num, cb) {
-  var written = 0
-  var start = Date.now()
-  for (var i = 0; i < num; i++) {
-    db.put(''+i, str, function (err) {
-      if (err) {
-        var oldCb = cb
-        cb = function () {}
-        return oldCb(err)
-      }
-      if (++written == num) {
-        var duration = Date.now() - start
-        cb(
-          null,
-          duration + 'ms (' + (Math.round(num/duration*1000)) + ' ops/s)'
-        )
-      }
-    })
-  }
 }
