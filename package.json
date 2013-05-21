@@ -16,7 +16,7 @@
   "author": "Julian Gruber <julian@juliangruber.com>",
   "license": "MIT",
   "dependencies": {
-    "mux-demux": "~3.6.1",
+    "mux-demux": "~3.7.3",
     "rpc-stream": "~1.0.1",
     "duplexer": "~0.0.3",
     "level-manifest": "~1.1.1",
