@@ -37,6 +37,12 @@ db.get('foo', function () { /* */ })
 db.createReadStream().on('data', function () { /* */ })
 ```
 
+## Compatibility
+
+multilevel works in the browser too - via [browserify](https://github.com/substack/node-browserify) -
+and has full support for binary data. For getting a connection between browser and server I recommend
+[websocket-stream](https://github.com/maxogden/websocket-stream), which treats binary data well.
+
 ## plugins
 
 You can also expose custom methods and [sublevels](https://github.com/dominictarr/level-sublevel)
