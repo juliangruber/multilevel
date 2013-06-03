@@ -37,36 +37,64 @@ db.get('foo', function () { /* */ })
 db.createReadStream().on('data', function () { /* */ })
 ```
 
-## sublevel plugins
+## plugins
 
 You can also expose custom methods and [sublevels](https://github.com/dominictarr/level-sublevel)
 with `multilevel`!
 
-When using sublevels, you must generate a manifest, and require it in the client.
+When using plugins, you must generate a manifest with 
+[level-manifest](https://github.com/dominictarr/level-manifest)
+and require it in the client.
+
+Here's an example:
+
 ``` js
-//server.js
-var db = require('./setup-db') //all your database customizations
-var fs = require('fs')
-var createManifest = require('level-manifest')
+// server.js
+// create `db`
+var levelup = require('levelup');
+var db = levelup(PATH);
 
-//write out manifest
-fs.writeFileSync('./manifest.json', JSON.stringify(createManifest(db)))
+// extend `db` with a foo(cb) method
+db.methods = db.methods || {};
+db.methods['foo'] = { type: 'async' };
+db.foo = function (cb) {
+  cb(null, 'bar');
+};
 
-shoe(function (stream) {
-  stream.pipe(multilevel.server(db)).pipe(stream)
-})
-...
+// now write the manifest to a file
+var fs = require('fs');
+var createManifest = require('level-manifest');
+fs.writeFileSync(__dirname + '/manifest.json', JSON.stringify(createManifest(db)));
+
+// then expose `db` via shoe or any other streaming transport.
+var shoe = require('shoe');
+var sock = shoe(function (stream) {
+  stream.pipe(multilevel.server(db)).pipe(stream);
+});
+sock.install(http.createServer(/* ... */), '/websocket');
 ```
-Then, the manifest is required from the client when bundling with browserify.
+
+[level-manifest](https://github.com/dominictarr/level-manifest) doesn't only
+support async functions but e.g. streams as well. For more, check its README.
+
+Then require the manifest on the client when bundling with browserify or in
+any other nodejs compatible environment.
 
 ``` js
-//client.js
-var manifest = require('./manifest.json')
-var stream = shoe()
-var db = multilevel.client(manifest)
-stream.pipe(db).pipe(stream)
-//now, get remote access to your extensions!
-db.sublevel('foo').createLiveStream()
+// client.js
+// instantiate a multilevel client with the `manifest.json` we just generated
+var multilevel = require('multilevel');
+var manifest = require('./manifest.json');
+var db = multilevel.client(manifest);
+
+// now pipe the db to the server
+var stream = shoe('/websocket');
+stream.pipe(db).pipe(stream);
+
+// and you can call the custom `foo` method!
+db.foo(function (err, res) {
+  console.log(res); // => "bar"
+});
 ```
 
 ## auth
@@ -229,3 +257,4 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
