@@ -103,7 +103,7 @@ function realNetwork (num, cb) {
 }
 
 function run (num, cb) {
-  console.log('\nwriting "' + str + '" ' + num + ' times\n')
+  console.log('\nwriting "%s" %s times', str, num)
 
   native(num, function (err, results) {
     log(err, results)
