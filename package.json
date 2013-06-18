@@ -1,6 +1,6 @@
 {
   "name": "multilevel",
-  "version": "4.0.6",
+  "version": "4.0.7",
   "description": "A levelUp instance exposed over a streaming interface",
   "main": "index.js",
   "scripts": {
@@ -16,12 +16,12 @@
   "author": "Julian Gruber <julian@juliangruber.com>",
   "license": "MIT",
   "dependencies": {
-    "mux-demux": "git://github.com/juliangruber/mux-demux#patch-1",
     "rpc-stream": "~1.0.3",
     "duplexer": "~0.0.3",
     "level-manifest": "~1.1.1",
     "msgpack-stream": "~0.0.3",
-    "stream-combiner": "~0.0.2"
+    "stream-combiner": "~0.0.2",
+    "mux-demux": "~3.7.4"
   },
   "devDependencies": {
     "tap": "~0.4.0",
