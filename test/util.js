@@ -40,7 +40,7 @@ util.getDb = function (setup, cb) {
         var _db = multilevel.client(m)
         var con = net.connect(port)
         con.on('error', function () { /* noop */})
-        _db.pipe(con).pipe(_db)
+        con.pipe(_db.createRpcStream()).pipe(con)
 
         _db.on('data', function (data) {
           DEBUG && console.log('C -> ' + data)
