@@ -8,12 +8,16 @@ var manifest = require('level-manifest')
 
 var DEBUG = process.env.DEBUG
 
+util.getLocalDb = function (cb) {
+  rimraf(__dirname + '/db', function (err) {
+    if (err) throw err;
+    else cb(levelup(__dirname + '/db'));
+  });
+}
+
 util.getDb = function (setup, cb) {
   if(!cb) cb = setup, setup = null
-  rimraf(__dirname + '/db', function (err) {
-    if (err) throw err
-    
-    var db = levelup(__dirname + '/db')
+  util.getLocalDb(function (db) {
     var opts
     if(setup) opts = setup(db)
 
@@ -49,13 +53,13 @@ util.getDb = function (setup, cb) {
         cb(_db, dispose)
 
         function dispose () {
-          server.close()
-          db.close()
-          con.destroy()
+          server.close();
+          db.close();
+          con.destroy();
         }
-      })
-    })
-  })
-}
+      });
+    });
+  });
+};
 
 
