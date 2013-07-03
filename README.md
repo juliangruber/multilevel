@@ -28,7 +28,8 @@ var multilevel = require('multilevel')
 var net = require('net')
 
 var db = multilevel.client()
-db.pipe(net.connect(3000)).pipe(db)
+var con = net.connect(3000)
+con.pipe(db.createRpcStream()).pipe(con)
   
 // asynchronous methods
 db.get('foo', function () { /* */ })
@@ -95,7 +96,7 @@ var db = multilevel.client(manifest);
 
 // now pipe the db to the server
 var stream = shoe('/websocket');
-stream.pipe(db).pipe(stream);
+stream.pipe(db.createRpcStream()).pipe(stream);
 
 // and you can call the custom `foo` method!
 db.foo(function (err, res) {
@@ -103,7 +104,7 @@ db.foo(function (err, res) {
 });
 ```
 
-## auth
+## Authentication
 
 You do not want to expose every database feature to every user,
 yet, you may want to provide some read-only access, or something.
@@ -151,7 +152,7 @@ The client authorizes by calling the auth method.
 ``` js
 var stream = shoe()
 var db = multilevel.client()
-stream.pipe(db).pipe(stream)
+stream.pipe(db.createRpcStream()).pipe(stream)
 
 db.auth({name: 'root', pass: 'toor'}, function (err, data) {
   if(err) throw err
@@ -189,9 +190,13 @@ var authOpts = {
 ```
 ### var db = multilevel.client(manifest?)
 
-Returns a `db` that is to be piped into a server-stream.
+Return a new client db.
 `manifest` may be optionally be provided,
 which will allow client access to extensions.
+
+#### db.createRpcStream()
+
+Pipe this into a server stream.
 
 #### db.auth(data, cb)
 
