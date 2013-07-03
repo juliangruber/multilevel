@@ -1,7 +1,7 @@
 {
-  "name": "multilevel",
-  "version": "4.1.0",
-  "description": "A levelUp instance exposed over a streaming interface",
+  "name": "multilevel-dev",
+  "version": "5.0.0",
+  "description": "Expose a leveldb over the network.",
   "main": "index.js",
   "scripts": {
     "test": "tap test/*.js"
