@@ -10,7 +10,6 @@ test('function in json', function (t) {
   t.plan(3);
   
   getDb(function (db, dispose) {
-    debugger;
     db.put('foo', obj, { valueEncoding: 'json' }, function (err) {
       t.error(err);
       db.get('foo', { valueEncoding: 'json' }, function (err, val) {
