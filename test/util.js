@@ -2,7 +2,7 @@ var util = module.exports = {}
 var multilevel = require('../')
 var rimraf = require('rimraf')
 var net = require('net')
-var levelup = require('level')
+var levelup = require('level-test')({ mem: true });
 var freeport = require('freeport')
 var manifest = require('level-manifest')
 
