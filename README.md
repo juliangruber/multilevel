@@ -7,44 +7,49 @@ with [levelUp](https://github.com/rvagg/node-levelup)'s API.
 
 ## Usage
 
-expose a db on the server:
+Expose a db on the server:
 
 ```js
-var multilevel = require('multilevel')
-var net = require('net')
-var levelup = require('levelup')
+var multilevel = require('multilevel');
+var net = require('net');
+var level = require('level');
 
-var db = levelup('/my/db')
+var db = level('/my/db');
 
-net.createServer(function (c) {
-  c.pipe(multilevel.server(db)).pipe(c)
-}).listen(3000)
+net.createServer(function (con) {
+  con.pipe(multilevel.server(db)).pipe(con);
+}).listen(3000);
 ```
 
-and connect to it from the client:
+And connect to it from the client:
 
 ```js
-var multilevel = require('multilevel')
-var net = require('net')
+var multilevel = require('multilevel');
+var net = require('net');
 
-var db = multilevel.client()
-var con = net.connect(3000)
-con.pipe(db.createRpcStream()).pipe(con)
-  
+var db = multilevel.client();
+var con = net.connect(3000);
+con.pipe(db.createRpcStream()).pipe(con);
+
 // asynchronous methods
-db.get('foo', function () { /* */ })
+db.get('foo', function () { /* */ });
 
 // streams
-db.createReadStream().on('data', function () { /* */ })
+db.createReadStream().on('data', function () { /* */ });
 ```
 
 ## Compatibility
 
-multilevel works in the browser too - via [browserify](https://github.com/substack/node-browserify) -
-and has full support for binary data. For getting a connection between browser and server I recommend
-[websocket-stream](https://github.com/maxogden/websocket-stream), which treats binary data well.
+multilevel works in the browser too - via
+[browserify](https://github.com/substack/node-browserify) - and has full
+support for binary data. For getting a connection between browser and server I
+recommend either
+[websocket-stream](https://github.com/maxogden/websocket-stream), which treats
+binary data well, or
+[engine.io-stream](https://github.com/Raynos/engine.io-stream) which has
+websocket fallbacks.
 
-## plugins
+## Plugins
 
 You can also expose custom methods and [sublevels](https://github.com/dominictarr/level-sublevel)
 with `multilevel`!
@@ -58,8 +63,8 @@ Here's an example:
 ``` js
 // server.js
 // create `db`
-var levelup = require('levelup');
-var db = levelup(PATH);
+var level = require('level');
+var db = level(PATH);
 
 // extend `db` with a foo(cb) method
 db.methods = db.methods || {};
@@ -106,93 +111,102 @@ db.foo(function (err, res) {
 
 ## Authentication
 
-You do not want to expose every database feature to every user,
-yet, you may want to provide some read-only access, or something.
+You do not want to expose every database feature to every user, you might e.g.
+only want to provide read-only access to some users.
 
 Auth controls may be injected when creating the server stream.
 
-Allow read only access, unless logged in as root.
-``` js
+In this example, allow read only access, unless logged in as root.
+
+```js
 //server.js
-var db = require('./setup-db') //all your database customizations
-var fs = require('fs')
-var createManifest = require('level-manifest')
+var db = require('./setup-db'); //all your database customizations
+var fs = require('fs');
+var createManifest = require('level-manifest');
 
 //write out manifest
-fs.writeFileSync('./manifest.json', JSON.stringify(createManifest(db)))
+fs.writeFileSync('./manifest.json', JSON.stringify(createManifest(db)));
 
 shoe(function (stream) {
   stream.pipe(multilevel.server(db, {
     auth: function (user, cb) {
-      if(user.name == 'root' && user.pass == 'toor') {
+      if (user.name == 'root' && user.pass == 'toor') {
         //the data returned will be attached to the mulilevel stream
         //and passed to `access`
-        cb(null, {name: 'root'})
-      } else
-        cb(new Error('not authorized')
+        cb(null, {name: 'root'});
+      } else {
+        cb(new Error('not authorized');
+      }
     },
     access: function (user, db, method, args) {
       //`user` is the {name: 'root'} object that `auth`
       //returned. 
 
       //if not a privliged user...
-      if(!user || user.name !== 'root') {
+      if (!user || user.name !== 'root') {
         //do not allow any write access
-        if(/^put|^del|^batch|write/i.test(method))
-          throw new Error('read-only access')
+        if (/^put|^del|^batch|write/i.test(method)) {
+          throw new Error('read-only access');
+        }
       }        
     })
-  })).pipe(stream)
-})
-...
+  })).pipe(stream);
+});
+
+// ...
 ```
 
 The client authorizes by calling the auth method.
 
 ``` js
-var stream = shoe()
-var db = multilevel.client()
-stream.pipe(db.createRpcStream()).pipe(stream)
+var multilevel = require('multilevel');
+var shoe = require('shoe');
 
-db.auth({name: 'root', pass: 'toor'}, function (err, data) {
-  if(err) throw err
+var stream = shoe();
+var db = multilevel.client();
+stream.pipe(db.createRpcStream()).pipe(stream);
+
+db.auth({ name: 'root', pass: 'toor' }, function (err, data) {
+  if (err) throw err
   //later, they can sign out, too.
 
   db.deauth(function (err) {
     //signed out!
-  })
-})
+  });
+});
 ```
 
 ## API
 
 The exposed DB has the exact same API as
-[levelUp](https://github.com/rvagg/node-levelup).
-Except that `close` closes the connection, instead of the database.
-`isOpen` and `isClose` tell you if you currently have a connection
-to the remote db.
+[levelUp](https://github.com/rvagg/node-levelup), except
 
-### multilevel.server(db, authOpts?)
+* `db#close()` closes the connection, instead of the database.
+* the synchronous versions of `db#isOpen()` and `db#isClose()` tell you if you
+currently have a connection to the remote db.
+* events, like `db.on("put", ...)` are not emitted. If you need updates, you
+can use [level-live-stream](https://github.com/dominictarr/level-live-stream).
+
+### multilevel.server(db[, authOpts])
 
 Returns a server-stream that exposes `db`, an instance of levelUp.
-`authOpts` is optional, it should match this:
+`authOpts` is optional and should be of this form:
 
 ``` js
 var authOpts = {
   auth: function (userData, cb) {
     //call back an error, if the user is not authorized.
-
   },
   access: function (userData, db, method, args) {
     //throw if this user is not authorized for this action.
   }
 }
 ```
-### var db = multilevel.client(manifest?)
 
-Return a new client db.
-`manifest` may be optionally be provided,
-which will allow client access to extensions.
+### var db = multilevel.client([manifest])
+
+Return a new client db. `manifest` may optionally be provided, which will
+grant the client access to extensions and sublevels.
 
 #### db.createRpcStream()
 
@@ -241,8 +255,10 @@ writing "1234567890abcdef" 100000 times
 
 ## Installation
 
+With [npm](http://npmjs.org) do:
+
 ```bash
-npm install multilevel
+$ npm install multilevel
 ```
 
 ## Contributing
