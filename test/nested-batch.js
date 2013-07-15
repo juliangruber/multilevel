@@ -1,5 +1,5 @@
 var getDb = require('./util').getDb
-var test = require('tap').test
+var test = require('tape')
 var sublevel = require('level-sublevel')
 
 test('async', function (t) {
@@ -20,11 +20,9 @@ test('async', function (t) {
       db.sublevel('foo').get('f', function (err, value) {
         if (err) throw err
         t.equal(value, '1')
-        console.log('done1', value)
         db.sublevel('bar').get('b', function (err, value) {
           if (err) throw err
           t.equal(value, '2')
-          console.log('done2', value)
           dispose()
         })
       })

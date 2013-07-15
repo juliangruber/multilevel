@@ -1,5 +1,5 @@
 var getDb = require('./util').getDb
-var test = require('tap').test
+var test = require('tape')
 
 test('stream', function (t) {
   t.plan(4)

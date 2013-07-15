@@ -1,5 +1,5 @@
 var getDb = require('./util').getDb
-var test = require('tap').test
+var test = require('tape')
 var sublevel = require('level-sublevel')
 
 test('nested-stream', function (t) {

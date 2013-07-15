@@ -4,7 +4,7 @@
   "description": "Expose a leveldb over the network.",
   "main": "index.js",
   "scripts": {
-    "test": "tap test/*.js"
+    "test": "tape test/*.js"
   },
   "repository": "git://github.com/juliangruber/multilevel",
   "keywords": [
@@ -25,7 +25,7 @@
     "tmp-stream": "0.1.0"
   },
   "devDependencies": {
-    "tap": "~0.4.0",
+    "tape": "~1.0.4",
     "rimraf": "~2.1.4",
     "freeport": "~1.0.0",
     "level": "~0.8.0",

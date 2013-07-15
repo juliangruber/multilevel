@@ -1,24 +1,17 @@
 var getDb = require('./util').getDb
-var test = require('tap').test
+var test = require('tape')
 var sublevel = require('level-sublevel')
 
 var uname = 'user_'+Math.random()
 var pword = 'pw_'+Math.random()
 var opts = {
   auth: function (username, password, cb) {
-    console.log('auth?', username, password)
-//    t.equal(username, uname)
-  //  t.equal(password, pword)
-    console.log(uname, pword)
-
     if(username == uname && password == pword)
       cb(null, {name: uname})
     else
       cb(new Error('not authorized'))
   },
   access: function (user, db, name, args) {
-    //read-only
-      console.log(user, name, args)
     if(!user && ~[
       'put', 'batch', 'del',
       'createWriteStream',

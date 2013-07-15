@@ -1,5 +1,5 @@
 var getDb = require('./util').getDb
-var test = require('tap').test
+var test = require('tape')
 
 test('sync isOpen / isClosed', function (t) {
   t.plan(2)

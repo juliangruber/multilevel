@@ -1,5 +1,5 @@
 var getDb = require('./util').getDb
-var test = require('tap').test
+var test = require('tape')
 var sublevel = require('level-sublevel')
 var LiveStream = require('level-live-stream')
 
@@ -9,15 +9,12 @@ test('stream', function (t) {
   getDb(function (db) {
     sublevel(db)
     var foo = db.sublevel('foo')
-    console.log(foo)
-    foo.post(console.log)
     LiveStream.install(foo)
   },
   function (db, dispose) {
     var foo = db.sublevel('foo')
     var ls = foo.liveStream()
       .on('data', function (d) {
-        console.log(d)
         t.equal(j-- * 1000, Number(d.value))
 
         if(j) return
