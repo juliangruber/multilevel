@@ -38,7 +38,7 @@ db.get('foo', function () { /* */ });
 db.createReadStream().on('data', function () { /* */ });
 ```
 
-## Compatibility
+## Compatibility and binary data
 
 multilevel works in the browser too - via
 [browserify](https://github.com/substack/node-browserify) - and has full
@@ -48,6 +48,16 @@ recommend either
 binary data well, or
 [engine.io-stream](https://github.com/Raynos/engine.io-stream), which has
 websocket fallbacks.
+
+When using a binary capable transport, require multilevel like this:
+
+```js
+var multilevel = require('multilevel/msgpack');
+```
+
+This way it uses [msgpack-stream](https://github.com/dominictarr/msgpack-stream)
+instead of [json-buffer](https://github.com/dominictarr/json-buffer) which uses
+way less bandwidth - but needs a binary capable transport.
 
 ## Plugins
 
