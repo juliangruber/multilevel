@@ -26,7 +26,6 @@
   },
   "devDependencies": {
     "tape": "~1.0.4",
-    "rimraf": "~2.1.4",
     "freeport": "~1.0.0",
     "level-test": "~1.4.0",
     "level-sublevel": "~4.5.0",

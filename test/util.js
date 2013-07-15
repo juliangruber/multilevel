@@ -1,19 +1,15 @@
 var util = module.exports = {}
 var multilevel = require('../')
-var rimraf = require('rimraf')
 var net = require('net')
-var levelup = require('level-test')({ mem: true });
+var level = require('level-test')({ mem: true });
 var freeport = require('freeport')
 var manifest = require('level-manifest')
 
 var DEBUG = process.env.DEBUG
 
 util.getLocalDb = function (cb) {
-  rimraf(__dirname + '/db', function (err) {
-    if (err) throw err;
-    else cb(levelup(__dirname + '/db'));
-  });
-}
+  cb(level());
+};
 
 util.getDb = function (setup, cb) {
   if(!cb) cb = setup, setup = null
