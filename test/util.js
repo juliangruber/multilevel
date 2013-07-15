@@ -1,61 +1,45 @@
-var util = module.exports = {}
-var multilevel = require('../')
-var net = require('net')
-var level = require('level-test')({ mem: true });
-var freeport = require('freeport')
-var manifest = require('level-manifest')
+var multilevel = require('../');
+var level = require('level-test')();
+var manifest = require('level-manifest');
 
+var util = module.exports = {};
 var DEBUG = process.env.DEBUG
 
-util.getLocalDb = function (cb) {
-  cb(level());
+util.getLocalDb = function () {
+  return level();
 };
 
 util.getDb = function (setup, cb) {
-  if(!cb) cb = setup, setup = null
-  util.getLocalDb(function (db) {
-    var opts
-    if(setup) opts = setup(db)
+  if (!cb) {
+    cb = setup;
+    setup = null;
+  }
 
-    var m = manifest(db)
+  var db = util.getLocalDb();
+  var opts;
+  if (setup) opts = setup(db);
 
-    var server = net.createServer(function (con) {
-      con.on('error', function () { /* noop */ })
-      var server = multilevel.server(db, opts)
+  var m = manifest(db);
 
-      con.on('data', function (data) {
-        DEBUG && console.log('S <- ' + data.toString())
-      })
-      server.on('data', function (data) {
-        DEBUG && console.log('S -> ' + data.toString())
-      })
+  var server = multilevel.server(db, opts);
+  var _db = multilevel.client(m);
+  var rpcStream = _db.createRpcStream();
+  server.pipe(rpcStream).pipe(server);
 
-      con.pipe(server).pipe(con)
-    })
-
-    freeport(function (err, port) {
-      if (err) throw err
-
-      server.listen(port, function () {
-        var _db = multilevel.client(m)
-        var con = net.connect(port)
-        con.on('error', function () { /* noop */})
-        con.pipe(_db.createRpcStream()).pipe(con)
-
-        _db.on('data', function (data) {
-          DEBUG && console.log('C -> ' + data)
-        })
-
-        cb(_db, dispose)
-
-        function dispose () {
-          server.close();
-          db.close();
-          con.destroy();
-        }
-      });
-    });
+  server.on('data', function (data) {
+    DEBUG && console.log('S -> ' + data.toString());
   });
+
+  rpcStream.on('data', function (data) {
+    DEBUG && console.log('S <- ' + data.toString())
+  });
+
+  cb(_db, dispose);
+
+  function dispose () {
+    server.close();
+    db.close();
+  }
 };
 
 
