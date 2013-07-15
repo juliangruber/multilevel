@@ -46,7 +46,7 @@ support for binary data. For getting a connection between browser and server I
 recommend either
 [websocket-stream](https://github.com/maxogden/websocket-stream), which treats
 binary data well, or
-[engine.io-stream](https://github.com/Raynos/engine.io-stream) which has
+[engine.io-stream](https://github.com/Raynos/engine.io-stream), which has
 websocket fallbacks.
 
 ## Plugins
