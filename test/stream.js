@@ -17,13 +17,11 @@ test('stream', function (t) {
         var stream = db.writeStream()
         stream.write({ key : 'bar', value : 'baz' })
         stream.on('close', function () {
-          //setTimeout(function () {
-            db.get('bar', function (err, value) {
-              t.notOk(err)
-              t.equal(value, 'baz')
-              dispose()
-            })
-          //}, 100)
+          db.get('bar', function (err, value) {
+            t.notOk(err)
+            t.equal(value, 'baz')
+            dispose()
+          })
         })
         stream.end()
       })
