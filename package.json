@@ -32,19 +32,23 @@
     "bops": "~0.0.6",
     "through": "~2.3.4"
   },
+  "engines": {
+    "node": ">0.6"
+  },
   "testling": {
     "files": "test/*.js",
     "browsers": [
-      "ie/6..latest",
-      "chrome/20..latest",
-      "firefox/10..latest",
-      "safari/latest",
-      "opera/11.0..latest",
-      "iphone/6",
-      "ipad/6"
+      "ie/8..latest",
+      "firefox/17..latest",
+      "firefox/nightly",
+      "chrome/22..latest",
+      "chrome/canary",
+      "opera/12..latest",
+      "opera/next",
+      "safari/5.1..latest",
+      "ipad/6.0..latest",
+      "iphone/6.0..latest",
+      "android-browser/4.2..latest"
     ]
-  },
-  "engines": {
-    "node": ">0.6"
   }
 }
