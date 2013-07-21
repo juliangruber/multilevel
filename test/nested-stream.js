@@ -23,11 +23,14 @@ test('nested-stream', function (t) {
         var stream = db.writeStream()
         stream.write({ key : 'bar', value : 'baz' })
         stream.on('close', function () {
-            db.get('bar', function (err, value) {
-              t.notOk(err)
-              t.equal(value, 'baz')
-              dispose()
-            })
+            // temporary fix for level-js
+            setTimeout(function () {
+              db.get('bar', function (err, value) {
+                t.notOk(err);
+                t.equal(value, 'baz');
+                dispose();
+              });
+            });
         })
         stream.end()
       })
