@@ -1,11 +1,11 @@
 require('./util')(function (test, _, getDb) {
 
   test('stream', function (t) {
-    t.plan(4);
+    t.plan(5);
   
     getDb(function (db, dispose) {
       db.put('foo', 'bar', function (err) {
-        if (err) throw err;
+        t.error(err);
       
         db.readStream()
         .on('data', function (data) {

@@ -52,15 +52,17 @@ util.createGetDb = function (multilevel) {
     });
     var _db = multilevel.client(m);
 
+    // use a net connection in node
+    var ns, con
+
     function createRpcStream () {
-      return _db.createRpcStream().on('data', function (data) {
+      var rpcStream = _db.createRpcStream();
+      rpcStream.on('data', function (data) {
         DEBUG && console.log('S <- ' + data.toString())
       });
+      return rpcStream;
     }
 
-    // use a net connection in node
-    var ns
-    var con
     if (typeof window == 'undefined') {
       ns = net.createServer(function (con) {
         con.pipe(server).pipe(con);

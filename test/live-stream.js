@@ -14,13 +14,17 @@ require('./util')(function (test, _, getDb) {
     },
     function (db, dispose) {
       var foo = db.sublevel('foo');
-      foo.liveStream().on('data', function (d) {
+      var ls = foo.liveStream();
+      ls.on('data', function (d) {
         t.equal(j-- * 1000, Number(d.value));
 
         if (j) return;
-        dispose();
+
+        ls.destroy();
         t.end();
+        dispose();
       });
+      ls.on('error', function () {});
 
       var i = 10;
       var id = setInterval(function () {
