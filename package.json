@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "tape": "~1.0.4",
-    "level-test": ">=1.4.2 <2",
+    "level-test": "~1.5.0",
     "level-sublevel": "~4.5.0",
     "level-live-stream": "~1.4.4",
     "bops": "~0.0.6",
