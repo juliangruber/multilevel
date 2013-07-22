@@ -19,14 +19,13 @@
     "rpc-stream": "~1.0.3",
     "duplexer": "~0.0.3",
     "level-manifest": "~1.1.1",
-    "msgpack-stream": "~0.0.3",
     "stream-combiner": "~0.0.2",
-    "mux-demux": "git://github.com/Wayla/mux-demux.git#fixed-jsonb",
+    "mux-demux": "~3.7.8",
     "tmp-stream": "0.1.0"
   },
   "devDependencies": {
     "tape": "~1.0.4",
-    "level-test": "git://github.com/juliangruber/level-test.git#update-levelup",
+    "level-test": ">=1.4.2 <2",
     "level-sublevel": "~4.5.0",
     "level-live-stream": "~1.4.4",
     "bops": "~0.0.6",
