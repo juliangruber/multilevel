@@ -8,6 +8,7 @@ require('./util')(function (test, _, getDb) {
       db.on('error', function (err) {
         t.ok(err);
         t.equal(err.name, 'NotFoundError');
+        dispose();
       });
     });
   });

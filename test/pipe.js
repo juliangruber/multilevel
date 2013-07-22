@@ -12,6 +12,7 @@ require('./util')(function (test, _, getDb) {
       t.throws(function () {
         (new Stream()).pipe(db);
       });
+      dispose();
     });
   });
 });

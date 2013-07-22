@@ -59,12 +59,15 @@ util.createGetDb = function (multilevel) {
     }
 
     // use a net connection in node
+    var ns
+    var con
     if (typeof window == 'undefined') {
-      net.createServer(function (con) {
+      ns = net.createServer(function (con) {
         con.pipe(server).pipe(con);
-      }).listen(function () {
+      });
+      ns.listen(function () {
         var port = this.address().port;
-        var con = net.connect(port);
+        con = net.connect(port);
         con.pipe(createRpcStream()).pipe(con);
         cb(_db, dispose);
       });
@@ -74,6 +77,7 @@ util.createGetDb = function (multilevel) {
     }
 
     function dispose () {
+      if (ns) ns.close(), con.destroy();
       server.close();
       db.close();
     }
