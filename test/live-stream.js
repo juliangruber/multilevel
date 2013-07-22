@@ -30,7 +30,7 @@ require('./util')(function (test, _, getDb) {
         foo.put(i, i*1000, function () {})
         if(--i) return
         clearInterval(int)
-      }, 100)
+      }, 0)
 
     })
   })
