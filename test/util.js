@@ -1,5 +1,5 @@
-var multilevel = require('../');
-var level = require('level-test')();
+var multilevel = require('..');
+var level = require('level-test')({ mem: true });
 var manifest = require('level-manifest');
 
 var util = module.exports = {};
