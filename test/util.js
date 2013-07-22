@@ -1,4 +1,4 @@
-var multilevel = require('../msgpack');
+var multilevel = require('../');
 var level = require('level-test')();
 var manifest = require('level-manifest');
 
