@@ -278,6 +278,7 @@ $ npm install multilevel
 ```bash
 $ npm install
 $ npm test
+$ npm run test-browser
 ```
 
 ## Contributors

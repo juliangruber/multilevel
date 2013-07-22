@@ -4,7 +4,8 @@
   "description": "Expose a leveldb over the network.",
   "main": "index.js",
   "scripts": {
-    "test": "tape test/*.js"
+    "test": "tape test/*.js",
+    "test-browser": "echo \"open http://localhost:9000/\" && browserify test/*.js | browser-run --port 9000"
   },
   "repository": "git://github.com/juliangruber/multilevel",
   "keywords": [
