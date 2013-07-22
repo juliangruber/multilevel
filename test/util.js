@@ -1,5 +1,6 @@
 var level = require('level-test')({ mem: true });
 var manifest = require('level-manifest');
+var net = require('net');
 
 var DEBUG = process.env.DEBUG
 
@@ -46,19 +47,31 @@ util.createGetDb = function (multilevel) {
     var m = manifest(db);
 
     var server = multilevel.server(db, opts);
-    var _db = multilevel.client(m);
-    var rpcStream = _db.createRpcStream();
-    server.pipe(rpcStream).pipe(server);
-
     server.on('data', function (data) {
       DEBUG && console.log('S -> ' + data.toString());
     });
+    var _db = multilevel.client(m);
 
-    rpcStream.on('data', function (data) {
-      DEBUG && console.log('S <- ' + data.toString())
-    });
+    function createRpcStream () {
+      return _db.createRpcStream().on('data', function (data) {
+        DEBUG && console.log('S <- ' + data.toString())
+      });
+    }
 
-    cb(_db, dispose);
+    // use a net connection in node
+    if (typeof window == 'undefined') {
+      net.createServer(function (con) {
+        con.pipe(server).pipe(con);
+      }).listen(function () {
+        var port = this.address().port;
+        var con = net.connect(port);
+        con.pipe(createRpcStream()).pipe(con);
+        cb(_db, dispose);
+      });
+    } else {
+      server.pipe(createRpcStream()).pipe(server);
+      cb(_db, dispose);
+    }
 
     function dispose () {
       server.close();
