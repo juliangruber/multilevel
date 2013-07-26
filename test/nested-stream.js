@@ -12,7 +12,7 @@ require('./util')(function (test, _, getDb) {
       db.sublevel('foo')
     }, 
     function (db, dispose) {
-      db = db.sublevels['foo']
+      db = db.sublevels['foo'];
       db.put('foo', 'bar', function (err) {
         if (err) throw err
   
@@ -21,7 +21,7 @@ require('./util')(function (test, _, getDb) {
           t.equal(data.key, 'foo')
           t.equal(data.value, 'bar')
         })
-        .on('end', function () {
+        .on('close', function () {
           var stream = db.writeStream()
           stream.write({ key : 'bar', value : 'baz' })
           stream.on('close', function () {

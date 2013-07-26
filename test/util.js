@@ -1,4 +1,4 @@
-var level = require('level-test')({ mem: true });
+var level = require('level-test')();
 var manifest = require('level-manifest');
 var net = require('net');
 
@@ -20,12 +20,12 @@ var util = module.exports = function (tests) {
     prefix('jsonb'),
     multilevel,
     util.createGetDb(multilevel)
-  )
+  );
   tests(
     prefix('msgpack'),
     multilevelMsgpack,
     util.createGetDb(multilevelMsgpack)
-  )
+  );
 };
 
 util.getLocalDb = function () {
@@ -52,9 +52,6 @@ util.createGetDb = function (multilevel) {
     });
     var _db = multilevel.client(m);
 
-    // use a net connection in node
-    var ns, con
-
     function createRpcStream () {
       var rpcStream = _db.createRpcStream();
       rpcStream.on('data', function (data) {
@@ -63,24 +60,10 @@ util.createGetDb = function (multilevel) {
       return rpcStream;
     }
 
-    if (typeof window == 'undefined') {
-      ns = net.createServer(function (con) {
-        con.pipe(server).pipe(con);
-      });
-      ns.listen(function () {
-        var port = this.address().port;
-        con = net.connect(port);
-        con.pipe(createRpcStream()).pipe(con);
-        cb(_db, dispose);
-      });
-    } else {
-      server.pipe(createRpcStream()).pipe(server);
-      cb(_db, dispose);
-    }
+    server.pipe(createRpcStream()).pipe(server);
+    cb(_db, dispose);
 
     function dispose () {
-      if (ns) ns.close(), con.destroy();
-      server.close();
       db.close();
     }
   };
