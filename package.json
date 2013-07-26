@@ -12,7 +12,9 @@
     "levelup",
     "leveldb",
     "rpc",
-    "stream"
+    "stream",
+    "server",
+    "client"
   ],
   "author": "Julian Gruber <julian@juliangruber.com>",
   "license": "MIT",
