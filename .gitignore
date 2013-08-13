@@ -2,3 +2,4 @@ node_modules
 test/db
 *.sw*
 example/.db
+test/node/manifest.json
