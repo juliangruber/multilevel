@@ -1,6 +1,6 @@
 var test = require('tape');
 var writeManifest = require('../..').writeManifest;
-var level = require('level-test')();
+var level = require('level-test')({ mem: true });
 
 test('write manifest', function (t) {
   var db = level();
