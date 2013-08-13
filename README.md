@@ -66,9 +66,7 @@ way less bandwidth - but needs a binary capable transport.
 You can also expose custom methods and [sublevels](https://github.com/dominictarr/level-sublevel)
 with `multilevel`!
 
-When using plugins, you must generate a manifest with 
-[level-manifest](https://github.com/dominictarr/level-manifest)
-and require it in the client.
+When using plugins, you must generate a manifest and require it in the client.
 
 Here's an example:
 
@@ -76,6 +74,7 @@ Here's an example:
 // server.js
 // create `db`
 var level = require('level');
+var multilevel = require('multilevel');
 var db = level(PATH);
 
 // extend `db` with a foo(cb) method
@@ -86,9 +85,7 @@ db.foo = function (cb) {
 };
 
 // now write the manifest to a file
-var fs = require('fs');
-var createManifest = require('level-manifest');
-fs.writeFileSync(__dirname + '/manifest.json', JSON.stringify(createManifest(db)));
+multilevel.writeManifest(db, __dirname + '/manifest.json');
 
 // then expose `db` via shoe or any other streaming transport.
 var shoe = require('shoe');
@@ -98,8 +95,9 @@ var sock = shoe(function (stream) {
 sock.install(http.createServer(/* ... */), '/websocket');
 ```
 
-[level-manifest](https://github.com/dominictarr/level-manifest) doesn't only
-support async functions but e.g. streams as well. For more, check its README.
+Manifests are generated using
+[level-manifest](https://github.com/dominictarr/level-manifest), which doesn't
+only support async functions but e.g. streams as well. For more, check its README.
 
 Then require the manifest on the client when bundling with browserify or in
 any other nodejs compatible environment.
@@ -214,6 +212,10 @@ var authOpts = {
   }
 }
 ```
+
+### multilevel.writeManifest(db, path)
+
+**Synchronoulsy** write `db`'s manifest to `path`.
 
 ### var db = multilevel.client([manifest])
 
