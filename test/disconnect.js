@@ -4,7 +4,7 @@ var multilevel = require('..');
 var test = require('tape');
 
 test('disconnect', function (t) {
-  t.plan(4);
+  t.plan(3);
 
   var db = getLocalDb();
   var server = multilevel.server(db);
@@ -27,16 +27,14 @@ test('disconnect', function (t) {
 
     var errored = false;
     client.createReadStream()
-      .once('data',function(data){
+      .on('data',function(data){
         t.equals(data.value, '1', 'data received');
         fakeConnection.end();  
       })
       .on('error',function (error) {
         errored = true;
-        t.ok(error.message.indexOf('disconnect') > -1, 'emitted disconnect error');
-      })
-      .once('close',function () {
-        t.ok(errored, 'emitted error event before close');
+        var hasDisconnect = error.message.indexOf('disconnect') > -1;
+        t.ok(hasDisconnect, 'emitted disconnect error');
       });
   });
 
