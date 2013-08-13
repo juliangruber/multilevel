@@ -131,11 +131,10 @@ In this example, allow read only access, unless logged in as root.
 ```js
 //server.js
 var db = require('./setup-db'); //all your database customizations
-var fs = require('fs');
-var createManifest = require('level-manifest');
+var multilevel = require('multilevel');
 
 //write out manifest
-fs.writeFileSync('./manifest.json', JSON.stringify(createManifest(db)));
+multilevel.writeManifest(db, __dirname + '/manifest.json');
 
 shoe(function (stream) {
   stream.pipe(multilevel.server(db, {
