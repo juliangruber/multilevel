@@ -24,7 +24,7 @@
     "level-manifest": "~1.1.1",
     "stream-combiner": "~0.0.2",
     "mux-demux": "~3.7.8",
-    "tmp-stream": "0.1.0"
+    "tmp-stream": "~0.2.3"
   },
   "devDependencies": {
     "tape": "~1.0.4",
