@@ -1,11 +1,14 @@
 require('./util')(function (test, _, getDb) {
 
   test('sync isOpen / isClosed', function (t) {
-    t.plan(2);
-  
+    t.plan(4);
+
     getDb(function (db, dispose) {
-      t.assert(db.isOpen());
-      t.assert(!db.isClosed());
+      t.ok(db.isOpen());
+      t.notOk(db.isClosed());
+      db.close();
+      t.notOk(db.isOpen());
+      t.ok(db.isClosed());
       dispose();
     });
   });
