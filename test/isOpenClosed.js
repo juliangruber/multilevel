@@ -1,6 +1,6 @@
 require('./util')(function (test, _, getDb) {
 
-  test('sync isOpen / isClosed sync', function (t) {
+  test('sync isOpen / isClosed with sync close', function (t) {
     t.plan(4);
 
     getDb(function (db, dispose) {
@@ -11,12 +11,12 @@ require('./util')(function (test, _, getDb) {
 
       t.notOk(db.isOpen());
       t.ok(db.isClosed());
-      
+
       dispose();
     });
   });
 
-  test('sync isOpen / isClosed async', function (t) {
+  test('sync isOpen / isClosed with async close', function (t) {
     t.plan(5);
 
     getDb(function (db, dispose) {
