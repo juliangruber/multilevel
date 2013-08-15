@@ -1,19 +1,17 @@
 var level = require('level-test')();
 var manifest = require('level-manifest');
 var net = require('net');
+var tape = require('tape');
+var multilevel = require('..');
+var multilevelMsgpack = require('../msgpack');
 
-var DEBUG = process.env.DEBUG
-
-var multilevel = require('../')
-var multilevelMsgpack = require('../msgpack')
-
-var tape = require('tape')
+var DEBUG = process.env.DEBUG;
 
 var util = module.exports = function (tests) {
   function prefix(pre) {
     return function (name, test) {
-      return tape(pre + ': ' + name, test)
-    }
+      return tape(pre + ': ' + name, test);
+    };
   }
 
   tests(
@@ -32,7 +30,6 @@ util.getLocalDb = function () {
   return level();
 };
 
-//util.getDb = 
 util.createGetDb = function (multilevel) {
   return function (setup, cb) {
     if (!cb) {
@@ -55,7 +52,7 @@ util.createGetDb = function (multilevel) {
     function createRpcStream () {
       var rpcStream = _db.createRpcStream();
       rpcStream.on('data', function (data) {
-        DEBUG && console.log('S <- ' + data.toString())
+        DEBUG && console.log('S <- ' + data.toString());
       });
       return rpcStream;
     }
@@ -69,4 +66,4 @@ util.createGetDb = function (multilevel) {
   };
 };
 
-util.getDb = util.createGetDb(multilevel)
+util.getDb = util.createGetDb(multilevel);
