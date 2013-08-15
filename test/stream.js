@@ -2,11 +2,11 @@ require('./util')(function (test, _, getDb) {
 
   test('stream', function (t) {
     t.plan(5);
-  
+
     getDb(function (db, dispose) {
       db.put('foo', 'bar', function (err) {
         t.error(err);
-      
+
         db.readStream()
         .on('data', function (data) {
           t.equal(data.key, 'foo');
@@ -23,7 +23,7 @@ require('./util')(function (test, _, getDb) {
                 t.equal(value, 'baz');
                 dispose();
               });
-            });
+            }, 100);
           });
           stream.end();
         })
