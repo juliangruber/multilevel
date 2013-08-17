@@ -15,13 +15,14 @@ require('./util')(function (test, _, getDb) {
       db = db.sublevels['foo'];
       db.put('foo', 'bar', function (err) {
         if (err) throw err
-
+        var i = 0
         db.createReadStream()
         .on('data', function (data) {
+          console.log('DATA', ++i, data)
           t.equal(data.key, 'foo')
           t.equal(data.value, 'bar')
         })
-        .on('close', function () {
+        .on('end', function () {
           var stream = db.writeStream()
           stream.write({ key : 'bar', value : 'baz' })
           stream.on('close', function () {
