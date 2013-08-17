@@ -15,10 +15,8 @@ require('./util')(function (test, _, getDb) {
       db = db.sublevels['foo'];
       db.put('foo', 'bar', function (err) {
         if (err) throw err
-        var i = 0
         db.createReadStream()
         .on('data', function (data) {
-          console.log('DATA', ++i, data)
           t.equal(data.key, 'foo')
           t.equal(data.value, 'bar')
         })
