@@ -27,9 +27,9 @@
     "tmp-stream": "~0.3.2"
   },
   "devDependencies": {
-    "tape": "~1.0.4",
-    "level-live-stream": "~1.4.4",
-    "bops": "~0.0.6",
+    "tape": "~2.3.0",
+    "level-live-stream": "~1.4.7",
+    "bops": "~0.1.0",
     "through": "~2.3.4",
     "level-sublevel": "~5.1.1",
     "memdb": "~0.1.0"
