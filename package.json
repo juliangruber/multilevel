@@ -21,7 +21,7 @@
   "dependencies": {
     "duplexer": "~0.1.1",
     "rpc-stream": "git://github.com/dominictarr/rpc-stream#non-enumerable",
-    "level-manifest": "~1.1.1",
+    "level-manifest": "git://github.com/juliangruber/level-manifest#nested",
     "stream-combiner": "0.0.2",
     "mux-demux": "~3.7.8",
     "tmp-stream": "~0.3.2"
