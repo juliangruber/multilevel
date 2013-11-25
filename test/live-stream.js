@@ -26,12 +26,14 @@ require('./util')(function (test, _, getDb) {
       });
       ls.on('error', function () {});
 
-      var i = 10;
-      var id = setInterval(function () {
-        foo.put(i, i*1000, function () {});
-        if (--i) return;
-        clearInterval(id);
-      }, 0);
+      setTimeout(function() {
+        var i = 10;
+        var id = setInterval(function () {
+          foo.put(i, i*1000, function () {});
+          if (--i) return;
+          clearInterval(id);
+        }, 0);
+      }, 10);
     });
   });
 });
