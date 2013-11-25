@@ -19,8 +19,8 @@
   "author": "Julian Gruber <julian@juliangruber.com>",
   "license": "MIT",
   "dependencies": {
-    "rpc-stream": "~1.0.3",
     "duplexer": "~0.0.3",
+    "rpc-stream": "git://github.com/dominictarr/rpc-stream#non-enumerable",
     "level-manifest": "~1.1.1",
     "stream-combiner": "~0.0.2",
     "mux-demux": "~3.7.8",
