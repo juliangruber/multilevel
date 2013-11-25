@@ -6,7 +6,7 @@ require('./util')(function (test, _, getDb) {
     t.plan(2)
   
     getDb(function (db) {
-      sublevel(db)
+      db = sublevel(db)
       var foo = db.sublevel('foo')
 
       //add inc to the manifest
@@ -30,6 +30,7 @@ require('./util')(function (test, _, getDb) {
         }
       }
 
+      return { db: db }
     },
     function (db, dispose) {
       var foo = db.sublevels['foo']

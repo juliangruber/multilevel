@@ -8,9 +8,9 @@ require('./util')(function (test, _, getDb) {
     var j = 10;
 
     getDb(function (db) {
-      sublevel(db);
-      var foo = db.sublevel('foo');
-      LiveStream.install(foo);
+      db = sublevel(db);
+      LiveStream.install(db.sublevel('foo'));
+      return { db: db };
     },
     function (db, dispose) {
       var foo = db.sublevel('foo');

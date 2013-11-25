@@ -6,10 +6,10 @@ require('./util')(function (test, _, getDb) {
     t.plan(3)
   
     getDb(function (db) {
-      sublevel(db)
+      db = sublevel(db)
       db.sublevel('foo')
       t.notOk(db.isClient)
-
+      return { db: db }
     }, 
     function (db, dispose) {
       t.ok(db.isClient)

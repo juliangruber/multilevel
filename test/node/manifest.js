@@ -1,9 +1,9 @@
 var test = require('tape');
 var writeManifest = require('../..').writeManifest;
-var level = require('level-test')({ mem: true });
+var MemDB = require('memdb');
 
 test('write manifest', function (t) {
-  var db = level();
+  var db = MemDB();
   writeManifest(db, __dirname + '/manifest.json');
   var manifest = require('./manifest.json');
   t.ok(manifest);

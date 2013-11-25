@@ -27,10 +27,13 @@ require('./util')(function (test, multilevel, getDb) {
     t.plan(8);
     
     getDb(function (db) {
-      sublevel(db);
+      db = sublevel(db);
       db.sublevel('foo');
       t.notOk(db.isClient);
-      return opts;
+      return {
+        opts: opts,
+        db: db
+      };
     }, 
     function (db, dispose) {
       t.ok(db.isClient);
@@ -60,10 +63,13 @@ require('./util')(function (test, multilevel, getDb) {
     t.plan(7);
     
     getDb(function (db) {
-      sublevel(db);
+      db = sublevel(db);
       db.sublevel('foo');
       t.notOk(db.isClient);
-      return opts;
+      return {
+        opts: opts,
+        db: db
+      };
     }, 
     function (db, dispose) {
       t.ok(db.isClient);

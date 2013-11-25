@@ -8,8 +8,9 @@ require('./util')(function (test, _, getDb) {
     t.plan(4)
 
     getDb(function (db) {
-      sublevel(db)
+      db = sublevel(db)
       db.sublevel('foo')
+      return { db: db }
     },
     function (db, dispose) {
       db = db.sublevels['foo'];

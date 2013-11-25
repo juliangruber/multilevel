@@ -1,12 +1,11 @@
-var level = require('level-test')();
+var MemDB = require('memdb');
 var manifest = require('level-manifest');
-var net = require('net');
 var tape = require('tape');
 var multilevel = require('..');
 var multilevelMsgpack = require('../msgpack');
 
 var DEBUG = process.env.DEBUG;
-
+  
 var util = module.exports = function (tests) {
   function prefix(pre) {
     return function (name, test) {
@@ -26,9 +25,7 @@ var util = module.exports = function (tests) {
   );
 };
 
-util.getLocalDb = function () {
-  return level();
-};
+util.getLocalDb = MemDB;
 
 util.createGetDb = function (multilevel) {
   return function (setup, cb) {
@@ -39,7 +36,11 @@ util.createGetDb = function (multilevel) {
 
     var db = util.getLocalDb();
     var opts;
-    if (setup) opts = setup(db);
+    if (setup) {
+      var ret = setup(db);
+      opts = ret.opts;
+      db = ret.db;
+    }
 
     var m = manifest(db);
 
