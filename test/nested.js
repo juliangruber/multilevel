@@ -1,7 +1,9 @@
 require('./util')(function (test, _, getDb) {
 
+  var Emitter = require('events').EventEmitter;
+
   test('nested', function (t) {
-    t.plan(7);
+    t.plan(10);
 
     getDb(function (db) {
       db.nested = {
@@ -28,7 +30,10 @@ require('./util')(function (test, _, getDb) {
     },
     function (db, dispose) {
       t.ok(db.nested, 'has nested');
+      t.ok(db.nested instanceof Emitter, 'nested is emitter');
       t.ok(db.nested.get, 'has nested.get');
+      t.ok(db.nested.deeper, 'has nested.deeper');
+      t.ok(db.nested.deeper instanceof Emitter, 'nested.deeper is emitter');
       t.ok(db.nested.deeper.get, 'has nested.deeper.get');
       
       db.nested.get(function(err, value) {
