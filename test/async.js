@@ -17,5 +17,17 @@ require('./util')(function (test, _, getDb) {
       })
     })
   })
+  
+  test('async error', function (t) {
+    t.plan(3)
+  
+    getDb(function (db, dispose) {
+      db.get('foo', function (err) {
+        t.ok(err)
+        t.ok(err.notFound)
+        t.equal(err.type, 'NotFoundError')
+      })
+    })
+  })
 
 })
