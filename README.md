@@ -225,6 +225,8 @@ grant the client access to extensions and sublevels.
 
 Pipe this into a server stream.
 
+Listen for the `error` event on this stream to handle / swallow reconnect events.
+
 #### db.auth(data, cb)
 
 Authorize with the server.
