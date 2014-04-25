@@ -212,6 +212,8 @@ var authOpts = {
 }
 ```
 
+It is necessary that you create _one server stream per client_.
+
 ### multilevel.writeManifest(db, path)
 
 **Synchronoulsy** write `db`'s manifest to `path`.
