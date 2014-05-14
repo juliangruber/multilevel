@@ -12,10 +12,12 @@ test('disconnect', function (t) {
   var fakeConnection = through();
   var readStream = db.createReadStream;
   var stream;
+  var chunks = 0;
 
   // get a reference to the server read stream
   db.createReadStream = function () {
     stream = readStream.apply(this, arguments);
+    stream.on('data', function () { chunks++ });
     return stream
   };
 
@@ -37,15 +39,16 @@ test('disconnect', function (t) {
     client.createReadStream()
       .on('data',function(data){
         t.equals(data.value, '1', 'data received');
-        fakeConnection.end();
+        fakeConnection.destroy();
       })
       .on('error',function (error) {
         errored = true;
         var hasDisconnect = error.message.indexOf('disconnect') > -1;
         t.ok(hasDisconnect, 'emitted disconnect error');
       });
+
     stream.on('close', function () {
-      t.ok(true, 'database readstream closed');
+      t.equals(chunks, 1, 'database read stream closed');
     });
   });
 
