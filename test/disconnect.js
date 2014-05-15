@@ -4,12 +4,22 @@ var multilevel = require('..');
 var test = require('tape');
 
 test('disconnect', function (t) {
-  t.plan(3);
+  t.plan(4);
 
   var db = getLocalDb();
   var server = multilevel.server(db);
   var client = multilevel.client();
   var fakeConnection = through();
+  var readStream = db.createReadStream;
+  var stream;
+  var chunks = 0;
+
+  // get a reference to the server read stream
+  db.createReadStream = function () {
+    stream = readStream.apply(this, arguments);
+    stream.on('data', function () { chunks++ });
+    return stream
+  };
 
   setTimeout(function () {
     server.pipe(fakeConnection).pipe(client.createRpcStream()).pipe(server);
@@ -29,13 +39,17 @@ test('disconnect', function (t) {
     client.createReadStream()
       .on('data',function(data){
         t.equals(data.value, '1', 'data received');
-        fakeConnection.end();  
+        fakeConnection.destroy();
       })
       .on('error',function (error) {
         errored = true;
         var hasDisconnect = error.message.indexOf('disconnect') > -1;
         t.ok(hasDisconnect, 'emitted disconnect error');
       });
+
+    stream.on('close', function () {
+      t.equals(chunks, 1, 'database read stream closed');
+    });
   });
 
 });
