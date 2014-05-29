@@ -8,8 +8,9 @@ var str = process.argv[4];
 var write = require('./write')(str);
 
 var db = multilevel.client()
+var stream = db.createRpcStream()
 var con = net.connect(port)
-db.pipe(con).pipe(db)
+stream.pipe(con).pipe(stream)
 
 var start = Date.now()
 write(db, num, function (err, results) {

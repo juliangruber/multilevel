@@ -52,7 +52,8 @@ function fakeNetwork (num, cb) {
     for (var i = 0; i < clients; i++) {
       var server = multilevel.server(db)
       var _db = multilevel.client()
-      _db.pipe(server).pipe(_db)
+      var stream = _db.createRpcStream()
+      stream.pipe(server).pipe(stream)
       dbs.push(_db);
     }
 
