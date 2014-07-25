@@ -22,9 +22,10 @@ require('./util')(function (test, _, getDb) {
           t.equal(data.value, 'bar')
         })
         .on('end', function () {
-          var stream = db.writeStream()
-          stream.write({ key : 'bar', value : 'baz' })
-          stream.on('close', function () {
+          db.batch([
+            { key : 'bar', value : 'baz' }
+          ], function (err) {
+            if(err) throw err
             // temporary fix for level-js
             setTimeout(function () {
               db.get('bar', function (err, value) {
@@ -34,7 +35,6 @@ require('./util')(function (test, _, getDb) {
               });
             }, 100);
           })
-          stream.end()
         })
       })
     })
