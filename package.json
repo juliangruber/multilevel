@@ -20,7 +20,7 @@
   "license": "MIT",
   "dependencies": {
     "duplexer": "~0.1.1",
-    "rpc-stream": "git://github.com/dominictarr/rpc-stream#non-enumerable",
+    "rpc-stream": "~2.1.1",
     "level-manifest": "~1.2.0",
     "stream-combiner": "0.0.2",
     "mux-demux": "~3.7.8",
