@@ -1,8 +1,8 @@
-var MemDB = require('memdb');
 var manifest = require('level-manifest');
 var tape = require('tape');
 var multilevel = require('..');
 var multilevelMsgpack = require('../msgpack');
+var level = require('level');
 
 var DEBUG = process.env.DEBUG;
   
@@ -25,7 +25,9 @@ var util = module.exports = function (tests) {
   );
 };
 
-util.getLocalDb = MemDB;
+util.getLocalDb = function(){
+  return level('/tmp/' + Math.random().toString(16).slice(2));
+};
 
 util.createGetDb = function (multilevel) {
   return function (setup, cb) {
