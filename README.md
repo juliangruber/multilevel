@@ -218,6 +218,8 @@ It is necessary that you create _one server stream per client_.
 
 **Synchronoulsy** write `db`'s manifest to `path`.
 
+Also returns the manifest as json.
+
 ### var db = multilevel.client([manifest])
 
 Return a new client db. `manifest` may optionally be provided, which will
