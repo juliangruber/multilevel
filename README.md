@@ -4,8 +4,7 @@ Expose a levelDB over the network, to be used by multiple processes,
 with [levelUp](https://github.com/rvagg/node-levelup)'s API.
 
 [![Build Status](https://travis-ci.org/juliangruber/multilevel.svg?branch=master)](https://travis-ci.org/juliangruber/multilevel)
-
-[![NPM](https://nodei.co/npm/multilevel.png)](https://nodei.co/npm/multilevel/)
+[![downloads](https://img.shields.io/npm/dm/multilevel.svg)](https://www.npmjs.org/package/multilevel)
 
 ## Usage
 
