@@ -32,7 +32,7 @@
     "bops": "~0.1.0",
     "through": "~2.3.4",
     "level-sublevel": "~6.1.4",
-    "memdb": "~0.1.0"
+    "memdb": "~1.0.1"
   },
   "engines": {
     "node": ">0.6"
