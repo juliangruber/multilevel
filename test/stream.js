@@ -1,9 +1,13 @@
+var levelws = require('level-ws');
+
 require('./util')(function (test, _, getDb) {
 
   test('stream', function (t) {
     t.plan(5);
 
     getDb(function (db, dispose) {
+      levelws(db);
+
       db.put('foo', 'bar', function (err) {
         t.error(err);
 
