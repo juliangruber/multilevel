@@ -22,7 +22,7 @@
     "duplexer": "~0.1.1",
     "rpc-stream": "~2.1.1",
     "level-manifest": "~1.2.0",
-    "stream-combiner": "0.2.2",
+    "stream-combiner": "0.0.2",
     "mux-demux": "~3.7.8",
     "tmp-stream": "~0.3.2"
   },
