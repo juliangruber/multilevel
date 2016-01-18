@@ -27,7 +27,7 @@
     "tmp-stream": "^0.3.2"
   },
   "devDependencies": {
-    "bops": "^0.1.1",
+    "bops": "^1.0.0",
     "level-live-stream": "^1.4.11",
     "level-sublevel": "^6.5.2",
     "level-ws": "0.0.0",
