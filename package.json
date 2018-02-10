@@ -1,6 +1,6 @@
 {
   "name": "multilevel",
-  "version": "7.2.2",
+  "version": "7.2.3",
   "description": "Expose a leveldb over the network.",
   "main": "index.js",
   "scripts": {
